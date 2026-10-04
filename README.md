@@ -20,8 +20,8 @@ GameMods/
 
 | File | What it covers |
 |---|---|
-| [MODDING.md](MODDING.md) | Setup, first mod, reading the game's code, libraries, releases, patchers and C++, troubleshooting, code style and conventions. |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Publishing your mod in this repo, issues, questions. |
+| [MODDING.md](MODDING.md) | How to mod here, start to finish, plus code style and conventions. |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Getting your mod into this repo, issues, questions. |
 | [TODO.md](TODO.md) | Unfinished parts of the repo. |
 
 ## Playing with mods (players)
@@ -39,10 +39,10 @@ A mod loader. Doorstop (two tiny files) starts before the game and injects BepIn
 
 ## Philosophy
 
-- Grown like the Nix dendritic pattern: every mod folder is a self-contained module the workspace discovers automatically; adding one never edits anything central.
-- Easy to use: a mod is two plain C# files, no Unity editor, no IDE; one command builds, deploys and zips it.
-- Cross-platform: any OS with the .NET SDK builds Windows mods, C++ cross-compiles via mingw, and `flake.nix` pins the whole toolchain.
-- A mod's `.csproj` holds only what differs from the defaults; the root build files do the repetitive work (metadata, references, validation, deploy, ZIP) exactly once.
-- One mod, one feature; shared code becomes a library only when that makes real consumers simpler.
-- Harmony is a last resort: prefer the game's own events, components, data and config binding.
-- Ship nothing the game already provides, and never game code or assets.
+- Structured after the Nix dendritic pattern: a mod is one self-contained folder the build discovers on its own, so adding a mod touches nothing central.
+- Easy to use: two plain C# files make a mod, and one command builds, deploys and zips it. No Unity editor, no IDE.
+- Cross-platform: any OS with a .NET SDK builds Windows mods, mingw handles the C++, `flake.nix` pins the toolchain.
+- A mod's `.csproj` holds only what differs from the defaults; the repetitive work (metadata, references, validation, deploy, ZIP) lives once in the root build files.
+- One mod, one feature. Shared code becomes a library only when that makes real consumers simpler.
+- Harmony is a last resort, not a first tool: prefer the game's own events, components, data and config binding.
+- Ship nothing the game already provides, never game code or assets.

@@ -1,6 +1,6 @@
 # Modding Lucid Cats
 
-How this workspace builds, structures, and ships mods. Installing mods as a player is covered in the [README](README.md); publishing your own mod in this repo in [CONTRIBUTING.md](CONTRIBUTING.md).
+How modding works in this workspace, from setup to release. Installing mods as a player is in the [README](README.md); getting your own mod into the repo is in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Contents
 

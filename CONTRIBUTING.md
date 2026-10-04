@@ -2,25 +2,25 @@
 
 ## Questions
 
-If [MODDING.md](MODDING.md) does not answer a modding question, open an issue or just hit me up. Questions worth answering get their answer added to the docs.
+If [MODDING.md](MODDING.md) doesn't answer a modding question, open an issue or just hit me up. Good questions get their answer written into the docs.
 
-## Publishing your mod here
+## Getting your mod in
 
-Mod contributions are welcome, two ways in:
+Mod contributions are welcome:
 
 - open a pull request that adds one folder, `mods/<YourMod>/`
-- open an issue first if you want a sanity check before building anything
+- or open an issue first for a sanity check before you build anything
 
 Accepted mods get their own release line (MODDING.md section 5).
 
-Before the pull request, confirm:
+Checklist for the pull request:
 
-- [ ] One folder: `mods/<YourMod>/` with the `.csproj` and sources; nothing changed outside it
-- [ ] Globally unique `<Guid>`, not a `com.lucidcats.*` default
-- [ ] No game code or assets included
-- [ ] Shared code pulled in via `SourceLibs`/`RuntimeLibs`, not copied
-- [ ] `dotnet build mods/<YourMod>/<YourMod>.csproj` succeeds and the result follows the MODDING.md code style
+- [ ] one folder, `mods/<YourMod>/`, with the `.csproj` and sources; nothing changed outside it
+- [ ] a globally unique `<Guid>`, not a `com.lucidcats.*` default
+- [ ] no game code or assets
+- [ ] shared code via `SourceLibs`/`RuntimeLibs`, not copied in
+- [ ] `dotnet build mods/<YourMod>/<YourMod>.csproj` works and the code follows the MODDING.md style
 
 ## Bugs and ideas
 
-Open an issue. Check [TODO.md](TODO.md) first: it lists what is already known to be unfinished.
+Open an issue. Check [TODO.md](TODO.md) first; the known gaps are already listed there.
