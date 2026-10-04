@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Guid>io.github.maxmen11.lucidcats.immersivespectating</Guid>
+		<Name>Immersive Spectating</Name>
+		<Description>Toggle between overhead and first-person views while spectating.</Description>
+		<Company>MaxMen11</Company>
+	</PropertyGroup>
+</Project>

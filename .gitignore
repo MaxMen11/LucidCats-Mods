@@ -1,0 +1,16 @@
+bin/
+obj/
+dist/*
+!dist/mods/
+!dist/runtime/
+dist/mods/*
+dist/runtime/*
+!dist/mods/.gitkeep
+!dist/runtime/.gitkeep
+.vs/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+decompiled/
+GHC.md

@@ -1,0 +1,12 @@
+{
+	"$schema": "http://json.schemastore.org/template",
+	"author": "Lucid Cats modding",
+	"classifications": [ "LucidCats", "BepInEx", "C++" ],
+	"identity": "LucidCats.NativeMod",
+	"name": "Lucid Cats C++ mod",
+	"shortName": "lcnative",
+	"sourceName": "ModName",
+	"symbols": {
+		"lowerName": { "type": "derived", "valueSource": "name", "valueTransform": "lowerCase", "replaces": "modname" }
+	}
+}

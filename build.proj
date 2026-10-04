@@ -1,0 +1,34 @@
+<Project DefaultTargets="Build">
+	<ItemGroup>
+		<ModProject Include="mods/*/*.csproj" />
+		<RuntimeProject Include="libs/runtime/*/*.csproj" />
+		<WorkspaceProject Include="@(ModProject);@(RuntimeProject)" />
+		<_ProjectName Include="@(WorkspaceProject->'%(Filename)')" />
+	</ItemGroup>
+
+	<Target Name="Validate">
+		<RemoveDuplicates Inputs="@(_ProjectName)">
+			<Output TaskParameter="Filtered" ItemName="_UniqueProjectName" />
+		</RemoveDuplicates>
+		<Error Condition="'@(_ProjectName->Count())' != '@(_UniqueProjectName->Count())'" Text="Project names must be unique across mods and runtime libraries." />
+		<MSBuild Projects="@(WorkspaceProject)" Targets="GetWorkspaceIdentity" BuildInParallel="true">
+			<Output TaskParameter="TargetOutputs" ItemName="_WorkspaceIdentity" />
+		</MSBuild>
+		<RemoveDuplicates Inputs="@(_WorkspaceIdentity)">
+			<Output TaskParameter="Filtered" ItemName="_UniqueWorkspaceIdentity" />
+		</RemoveDuplicates>
+		<Error Condition="'@(_WorkspaceIdentity->Count())' != '@(_UniqueWorkspaceIdentity->Count())'" Text="Plugin GUIDs must be unique across mods and runtime libraries." />
+	</Target>
+
+	<Target Name="Build" DependsOnTargets="Validate">
+		<MSBuild Projects="@(ModProject)" Targets="Restore;Build" BuildInParallel="true" />
+	</Target>
+
+	<Target Name="Rebuild" DependsOnTargets="Validate">
+		<MSBuild Projects="@(ModProject)" Targets="Restore;Rebuild" BuildInParallel="true" />
+	</Target>
+
+	<Target Name="Clean">
+		<MSBuild Projects="@(ModProject)" Targets="Clean" BuildInParallel="true" />
+	</Target>
+</Project>

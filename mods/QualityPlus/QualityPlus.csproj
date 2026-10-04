@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Guid>io.github.maxmen11.lucidcats.qualityplus</Guid>
+		<Name>QualityPlus</Name>
+		<Version>2.6.0</Version>
+		<Description>Adds configurable graphics presets to the quality menu.</Description>
+		<Company>MaxMen11</Company>
+		<SourceLibs>MenuKit</SourceLibs>
+	</PropertyGroup>
+	<ItemGroup>
+		<Reference Include="$(LucidCatsManagedDir)/SSGIURP.dll" Private="false" />
+	</ItemGroup>
+</Project>

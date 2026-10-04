@@ -1,0 +1,44 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+      - "*-v*"
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build asset
+        id: asset
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          NAME="${TAG%%-v*}"
+          if [[ "$TAG" == template-full-v* ]]; then
+            git archive --format=zip -o lucidcats-template-full.zip HEAD -- ':(exclude)mods' ':(exclude)dist'
+            echo "file=lucidcats-template-full.zip" >> "$GITHUB_OUTPUT"
+          elif [[ "$TAG" == template-v* ]]; then
+            git archive --format=zip -o lucidcats-template.zip HEAD -- ':(exclude)libs' ':(exclude)mods' ':(exclude)dist'
+            echo "file=lucidcats-template.zip" >> "$GITHUB_OUTPUT"
+          elif [[ "$TAG" == v[0-9]* ]]; then
+            echo "file=" >> "$GITHUB_OUTPUT"
+          elif [[ -d "libs/source/$NAME" ]]; then
+            git archive --format=zip -o "$NAME.zip" "HEAD:libs/source/$NAME"
+            echo "file=$NAME.zip" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Create release
+        if: steps.asset.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          FILE="${{ steps.asset.outputs.file }}"
+          if [[ -n "$FILE" ]]; then
+            gh release create "$TAG" "$FILE" --title "$TAG" --generate-notes
+          else
+            gh release create "$TAG" --title "$TAG" --generate-notes --latest
+          fi

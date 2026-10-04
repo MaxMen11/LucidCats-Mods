@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Description>ModName for Lucid Cats.</Description>
+		<Company />
+		<GenerateModMetadata>false</GenerateModMetadata>
+		<BepInExFolder>patchers</BepInExFolder>
+	</PropertyGroup>
+</Project>

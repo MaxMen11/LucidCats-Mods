@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Guid>com.lucidcats.modname</Guid>
+		<Description>ModName for Lucid Cats.</Description>
+		<Company />
+	</PropertyGroup>
+</Project>

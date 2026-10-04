@@ -1,0 +1,9 @@
+{
+	"$schema": "http://json.schemastore.org/template",
+	"author": "Lucid Cats modding",
+	"classifications": [ "LucidCats", "BepInEx" ],
+	"identity": "LucidCats.Patcher",
+	"name": "Lucid Cats patcher mod",
+	"shortName": "lcpatcher",
+	"sourceName": "ModName"
+}

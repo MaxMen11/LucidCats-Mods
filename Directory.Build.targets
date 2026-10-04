@@ -1,0 +1,128 @@
+<Project>
+	<ItemGroup Condition="'$(SourceLibs)' != ''">
+		<_SourceLibName Include="$(SourceLibs)" />
+	</ItemGroup>
+
+	<Target Name="IncludeSourceLibraries" BeforeTargets="CoreCompile" Condition="'$(SourceLibs)' != ''">
+		<ItemGroup>
+			<Compile Include="$(SourceLibDir)%(_SourceLibName.Identity)/**/*.cs" />
+		</ItemGroup>
+	</Target>
+
+	<ItemGroup Condition="'$(RuntimeLibs)' != ''">
+		<_RuntimeLibName Include="$(RuntimeLibs)" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(RuntimeLibs)' != ''">
+		<ProjectReference Include="@(_RuntimeLibName->'$(RuntimeLibDir)%(Identity)/%(Identity).csproj')">
+			<Private>false</Private>
+			<GlobalPropertiesToRemove>SourceLibs;RuntimeLibs;Guid;Name;Version;Description;Company;Copyright</GlobalPropertiesToRemove>
+		</ProjectReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="$(LucidCatsBepInExDir)/core/BepInEx.dll" Private="false" />
+		<Reference Include="$(LucidCatsBepInExDir)/core/0Harmony.dll" Private="false" />
+		<Reference Include="$(LucidCatsManagedDir)/Assembly-CSharp.dll" Private="false" />
+		<Reference Include="$(LucidCatsManagedDir)/UnityEngine.dll" Private="false" />
+		<Reference Include="$(LucidCatsManagedDir)/UnityEngine.*.dll" Private="false" />
+		<Reference Include="$(LucidCatsManagedDir)/Unity.*.dll" Private="false" />
+		<Reference Include="$(LucidCatsManagedDir)/HaniUtils.*.dll" Private="false" />
+		<Reference Include="$(LucidCatsBepInExDir)/core/Mono.Cecil.dll" Private="false" Condition="'$(BepInExFolder)' == 'patchers'" />
+	</ItemGroup>
+
+	<Target Name="ValidateModProject" BeforeTargets="BeforeBuild">
+		<Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(Guid)', '^[a-zA-Z0-9._-]+$'))" Text="Guid '$(Guid)' may contain only letters, numbers, dots, underscores, and hyphens." />
+		<Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(Version)', '^\d+\.\d+(\.\d+){0,2}$'))" Text="Version '$(Version)' must contain two to four numeric parts for BepInEx 5." />
+		<Error Condition="'%(_SourceLibName.Identity)' != '' and !Exists('$(SourceLibDir)%(_SourceLibName.Identity)')" Text="Unknown source library '%(_SourceLibName.Identity)'. Expected $(SourceLibDir)%(_SourceLibName.Identity)/." />
+		<Error Condition="'%(_RuntimeLibName.Identity)' != '' and !Exists('$(RuntimeLibDir)%(_RuntimeLibName.Identity)/%(_RuntimeLibName.Identity).csproj')" Text="Unknown runtime library '%(_RuntimeLibName.Identity)'." />
+		<RemoveDuplicates Inputs="@(_SourceLibName)">
+			<Output TaskParameter="Filtered" ItemName="_UniqueSourceLibName" />
+		</RemoveDuplicates>
+		<RemoveDuplicates Inputs="@(_RuntimeLibName)">
+			<Output TaskParameter="Filtered" ItemName="_UniqueRuntimeLibName" />
+		</RemoveDuplicates>
+		<Error Condition="'@(_SourceLibName->Count())' != '@(_UniqueSourceLibName->Count())'" Text="SourceLibs contains a duplicate name." />
+		<Error Condition="'@(_RuntimeLibName->Count())' != '@(_UniqueRuntimeLibName->Count())'" Text="RuntimeLibs contains a duplicate name." />
+	</Target>
+
+	<Target Name="GenerateModMetadata" BeforeTargets="CoreCompile" Condition="'$(GenerateModMetadata)' == 'true'">
+		<ItemGroup>
+			<_ModMetadataLine Include="namespace $(MetadataNamespace)" />
+			<_ModMetadataLine Include="{" />
+			<_ModMetadataLine Include="&#x9;$(MetadataAccess) static class ModMetadata" />
+			<_ModMetadataLine Include="&#x9;{" />
+			<_ModMetadataLine Include="&#x9;&#x9;public const string Guid = &quot;$(Guid)&quot;%3B" />
+			<_ModMetadataLine Include="&#x9;&#x9;public const string Name = &quot;$(Name)&quot;%3B" />
+			<_ModMetadataLine Include="&#x9;&#x9;public const string Version = &quot;$(Version)&quot;%3B" />
+			<_ModMetadataLine Include="&#x9;}" />
+			<_ModMetadataLine Include="}" />
+		</ItemGroup>
+		<WriteLinesToFile File="$(GeneratedModMetadataFile)" Lines="@(_ModMetadataLine)" Overwrite="true" Encoding="UTF-8" />
+		<ItemGroup>
+			<Compile Include="$(GeneratedModMetadataFile)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="GenerateRuntimeDependencies" BeforeTargets="CoreCompile" Condition="'$(RuntimeLibs)' != ''">
+		<ItemGroup>
+			<_RuntimeDependencyLine Include="namespace $(RootNamespace)" />
+			<_RuntimeDependencyLine Include="{" />
+			<_RuntimeDependencyLine Include="&#x9;[global::BepInEx.BepInDependency(global::%(_RuntimeLibName.Identity).ModMetadata.Guid, global::%(_RuntimeLibName.Identity).ModMetadata.Version)]" />
+			<_RuntimeDependencyLine Include="&#x9;public partial class $(PluginClass)" />
+			<_RuntimeDependencyLine Include="&#x9;{" />
+			<_RuntimeDependencyLine Include="&#x9;}" />
+			<_RuntimeDependencyLine Include="}" />
+		</ItemGroup>
+		<WriteLinesToFile File="$(GeneratedRuntimeDependenciesFile)" Lines="@(_RuntimeDependencyLine)" Overwrite="true" Encoding="UTF-8" />
+		<ItemGroup>
+			<Compile Include="$(GeneratedRuntimeDependenciesFile)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="GetWorkspaceIdentity" Returns="@(_WorkspaceIdentity)">
+		<ItemGroup>
+			<_WorkspaceIdentity Include="$(Guid)">
+				<ProjectName>$(MSBuildProjectName)</ProjectName>
+			</_WorkspaceIdentity>
+		</ItemGroup>
+	</Target>
+
+	<Target Name="BuildNative" BeforeTargets="CoreCompile" Condition="Exists('$(MSBuildProjectDirectory)/native/CMakeLists.txt')">
+		<PropertyGroup>
+			<NativeSourceDir>$(MSBuildProjectDirectory)/native</NativeSourceDir>
+			<NativeBuildDir>$(IntermediateOutputPath)native/</NativeBuildDir>
+			<NativeToolchainArgs Condition="'$([MSBuild]::IsOSPlatform(Windows))' != 'true'">-DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++</NativeToolchainArgs>
+		</PropertyGroup>
+		<Exec Command="cmake -S &quot;$(NativeSourceDir)&quot; -B &quot;$(NativeBuildDir)&quot; -DCMAKE_BUILD_TYPE=Release $(NativeToolchainArgs)" />
+		<Exec Command="cmake --build &quot;$(NativeBuildDir)&quot; --config Release" />
+		<ItemGroup>
+			<NativeArtifact Include="$(NativeBuildDir)**/$(MSBuildProjectName)Native.dll" />
+		</ItemGroup>
+		<Copy SourceFiles="@(NativeArtifact)" DestinationFolder="$(OutputPath)" />
+	</Target>
+
+	<Target Name="CheckGameDir" BeforeTargets="BeforeBuild" Condition="!Exists('$(LucidCatsManagedDir)/Assembly-CSharp.dll')">
+		<Error Text="Point LucidCatsDir at the Lucid Cats game folder (currently '$(LucidCatsDir)')." />
+	</Target>
+
+	<Target Name="CleanProjectOutput" BeforeTargets="PrepareForBuild">
+		<RemoveDir Directories="$(OutputPath)" />
+	</Target>
+
+	<Target Name="DeployToLucidCats" AfterTargets="Build" Condition="Exists('$(LucidCatsBepInExDir)/$(BepInExFolder)')">
+		<ItemGroup>
+			<_DeployFile Include="$(OutputPath)*.dll" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_DeployFile)" DestinationFolder="$(LucidCatsBepInExDir)/$(BepInExFolder)/$(MSBuildProjectName)/" />
+	</Target>
+
+	<Target Name="ZipMod" AfterTargets="Build">
+		<RemoveDir Directories="$(ZipStageDir)" />
+		<ItemGroup>
+			<_PackageFile Include="$(OutputPath)**/*.*" Exclude="$(OutputPath)**/*.pdb;$(OutputPath)**/*.deps.json" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_PackageFile)" DestinationFolder="$(ZipStageDir)BepInEx/$(BepInExFolder)/$(MSBuildProjectName)/%(RecursiveDir)" />
+		<ZipDirectory SourceDirectory="$(ZipStageDir)" DestinationFile="$(PackagePath)" Overwrite="true" />
+		<RemoveDir Directories="$(ZipStageDir)" />
+	</Target>
+</Project>

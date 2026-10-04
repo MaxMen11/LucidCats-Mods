@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Guid>io.github.maxmen11.lucidcats.conflation</Guid>
+		<Description>Every vanilla level merged into one, under thick dark fog.</Description>
+		<Company>MaxMen11</Company>
+		<RuntimeLibs>MapKit</RuntimeLibs>
+	</PropertyGroup>
+</Project>

@@ -1,0 +1,10 @@
+{
+	"$schema": "http://json.schemastore.org/template",
+	"author": "Lucid Cats modding",
+	"classifications": [ "LucidCats", "BepInEx", "Runtime" ],
+	"identity": "LucidCats.RuntimeLibrary",
+	"name": "Lucid Cats runtime library",
+	"shortName": "lcruntime",
+	"sourceName": "RuntimeName",
+	"preferNameDirectory": true
+}

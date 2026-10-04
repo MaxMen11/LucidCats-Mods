@@ -1,0 +1,12 @@
+{
+	"$schema": "http://json.schemastore.org/template",
+	"author": "Lucid Cats modding",
+	"classifications": [ "LucidCats", "BepInEx" ],
+	"identity": "LucidCats.Mod",
+	"name": "Lucid Cats plugin mod",
+	"shortName": "lcmod",
+	"sourceName": "ModName",
+	"symbols": {
+		"lowerName": { "type": "derived", "valueSource": "name", "valueTransform": "lowerCase", "replaces": "modname" }
+	}
+}
