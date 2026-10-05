@@ -185,7 +185,7 @@ jobs:
               major, minor, patch = (int(p) for p in previous.split("-v", 1)[1].split("."))
               version = f"{major}.{minor}.{patch + 1}"
           else:
-              version = "1.0.0"
+              version = "0.1.0"
           bundle = out / f"LucidCats-all-mods-{version}.zip"
           seen = set()
           with zipfile.ZipFile(bundle, "w", zipfile.ZIP_DEFLATED) as merged:
