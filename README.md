@@ -2,7 +2,7 @@
 
 This repo's goal: all the information you need about Lucid Cats modding and mods, a clean architecture for the mods themselves, and a clean setup for anyone who wants to get started.
 
-> AI notice: If you are curious, please read AI-NOTICE.md.
+> AI notice: If you are curious, please read [AI-NOTICE.md](AI-NOTICE.md).
 
 - **Playing with mods** - install and play. Six steps, right below.
 - **Making mods** - build your own in plain C#: no Unity editor, no IDE. [MODDING.md](MODDING.md) covers setup to release.
