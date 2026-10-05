@@ -187,7 +187,7 @@ Everything ships from this one repo as seven release lines. Each is a tag patter
 
 Prefixed releases never take the workspace snapshot's Latest badge. The Releases search accepts filters such as `tag:MapKit` and `tag:template`. The names `template`, `template-full`, and `all-mods` are reserved.
 
-Snapshot, template, and source-library tags publish automatically. Mods, runtime libraries, and bundles are released locally because compiling them requires the game DLLs.
+Snapshot, template, and source-library tags are pushed by hand and publish automatically. Mods and runtime libraries are built locally because compiling needs the game DLLs; their zips are committed under dist/, and the Action releases every unreleased version it finds on push to main, then cuts the bundle. Bump Version in the .csproj to ship again — identical bytes are skipped, changed bytes under the same version fail the run unless dispatched with force
 
 To publish a mod of your own in this repo, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
