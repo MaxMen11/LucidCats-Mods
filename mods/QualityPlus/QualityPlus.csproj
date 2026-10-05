@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<Guid>io.github.maxmen11.lucidcats.qualityplus</Guid>
 		<Name>QualityPlus</Name>
-		<Version>2.6.0</Version>
+		<Version>0.1.0</Version>
 		<Description>Adds configurable graphics presets to the quality menu.</Description>
 		<Company>MaxMen11</Company>
 		<SourceLibs>MenuKit</SourceLibs>

@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<Guid>io.github.maxmen11.lucidcats.fullparty</Guid>
 		<Name>Full Party</Name>
-		<Version>2.3.0</Version>
+		<Version>0.1.0</Version>
 		<Description>Adds larger lobbies, safe mid-run joining, and synchronized shared beds.</Description>
 		<Company>MaxMen11</Company>
 	</PropertyGroup>

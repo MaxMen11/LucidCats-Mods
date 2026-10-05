@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<Guid>io.github.maxmen11.lucidcats.immersivespectating</Guid>
 		<Name>Immersive Spectating</Name>
+		<Version>0.1.0</Version>
 		<Description>Toggle between overhead and first-person views while spectating.</Description>
 		<Company>MaxMen11</Company>
 	</PropertyGroup>

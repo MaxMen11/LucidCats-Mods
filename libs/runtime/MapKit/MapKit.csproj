@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Guid>io.github.maxmen11.lucidcats.mapkit</Guid>
-		<Version>1.0.0</Version>
+		<Version>0.1.0</Version>
 		<Description>Tools for building custom Lucid Cats maps.</Description>
 		<Company>MaxMen11</Company>
 	</PropertyGroup>
