@@ -7,6 +7,8 @@ dist/mods/*
 dist/runtime/*
 !dist/mods/.gitkeep
 !dist/runtime/.gitkeep
+!dist/mods/*.zip
+!dist/runtime/*.zip
 .vs/
 .vscode/
 .idea/

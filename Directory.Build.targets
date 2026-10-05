@@ -122,6 +122,11 @@
 			<_PackageFile Include="$(OutputPath)**/*.*" Exclude="$(OutputPath)**/*.pdb;$(OutputPath)**/*.deps.json" />
 		</ItemGroup>
 		<Copy SourceFiles="@(_PackageFile)" DestinationFolder="$(ZipStageDir)BepInEx/$(BepInExFolder)/$(MSBuildProjectName)/%(RecursiveDir)" />
+		<ItemGroup>
+			<_StagedFile Include="$(ZipStageDir)**/*" />
+		</ItemGroup>
+		<!-- fixed timestamps so same content packs to same bytes -->
+		<Touch Files="@(_StagedFile)" Time="1980-01-01T00:00:00" />
 		<ZipDirectory SourceDirectory="$(ZipStageDir)" DestinationFile="$(PackagePath)" Overwrite="true" />
 		<RemoveDir Directories="$(ZipStageDir)" />
 	</Target>

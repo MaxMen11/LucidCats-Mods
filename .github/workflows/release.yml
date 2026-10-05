@@ -1,11 +1,212 @@
+# Push to main with built zips in dist/: an unreleased version becomes
+# <Name>-v<Version>, with DESCRIPTION.md and icon.png from meta/ if present.
+# Same bytes already released are skipped; new bytes with the same version
+# fail the run (dispatch with force to overwrite). New releases cut the next
+# all-mods bundle. Bump <Version> in the csproj to ship again.
+# Tags by hand: v1.2.0 snapshot, template-v*, template-full-v*, <SourceLib>-v*.
+
 name: Release
+
 on:
   push:
-    tags:
-      - "v*"
-      - "*-v*"
+    branches: [main]
+    tags: ["v*", "*-v*"]
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Overwrite released assets whose bytes changed
+        type: boolean
+        default: false
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
-  release:
+  dist:
+    if: github.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - run: pip install --quiet pefile==2024.8.26
+      - name: Release new versions from dist/
+        shell: python
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          import hashlib, os, re, subprocess, sys, tempfile, zipfile
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          import pefile
+
+          RESERVED = {"template", "template-full", "all-mods"}
+          FORCE = os.environ.get("FORCE") == "true"
+          out = Path(tempfile.mkdtemp())
+          errors = 0
+
+          def sh(*args, check=True):
+              return subprocess.run(args, check=check, capture_output=True, text=True).stdout.strip()
+
+          def fail(file, message):
+              global errors
+              errors += 1
+              print(f"::error file={file}::{message}")
+
+          def props_of(csproj):
+              return {element.tag: (element.text or "").strip()
+                      for group in ET.parse(csproj).getroot().iter("PropertyGroup") for element in group}
+
+          def dll_version(zip_path, name):
+              """ProductVersion of the mod DLL inside the zip, or None."""
+              with zipfile.ZipFile(zip_path) as archive:
+                  member = next((n for n in archive.namelist() if n.endswith(f"/{name}/{name}.dll")), None)
+                  if member is None:
+                      return None
+                  try:
+                      pe = pefile.PE(data=archive.read(member))
+                  except pefile.PEFormatError:
+                      return None
+              for info in getattr(pe, "FileInfo", None) or []:
+                  for entry in info:
+                      for table in getattr(entry, "StringTable", []):
+                          value = table.entries.get(b"ProductVersion")
+                          if value:
+                              return value.decode().split("+")[0].strip()
+              return None
+
+          def padded(version):
+              """1.4 == 1.4.0 == 1.4.0.0"""
+              parts = [int(p) for p in re.findall(r"\d+", version)]
+              return parts + [0] * (4 - len(parts))
+
+          def last_tag(prefix):
+              tags = sh("git", "tag", "--list", f"{prefix}-v*", "--sort=-v:refname").splitlines()
+              return tags[0] if tags else None
+
+          def released_asset(tag, asset_name):
+              """(exists, sha256 of the released asset or None)."""
+              jq = f'.assets[] | select(.name == "{asset_name}") | .digest'
+              r = subprocess.run(["gh", "release", "view", tag, "--json", "assets", "--jq", jq],
+                                 capture_output=True, text=True)
+              digest = r.stdout.strip()
+              return r.returncode == 0, digest[7:] if digest.startswith("sha256:") else None
+
+          # Gate every zip against its csproj, then release, skip, or complain.
+          verified = []
+          for kind, root in (("mods", Path("mods")), ("runtime", Path("libs/runtime"))):
+              for z in sorted(Path("dist", kind).glob("*.zip")):
+                  name = z.stem
+                  csproj = root / name / f"{name}.csproj"
+                  if not csproj.exists():
+                      print(f"::warning file={z}::leftover ZIP, no {csproj}; delete it from dist/")
+                      continue
+                  if name.lower() in RESERVED:
+                      fail(csproj, f"'{name}' is a reserved release name")
+                      continue
+                  props = props_of(csproj)
+                  version = props.get("Version") or "1.0.0"
+                  built = dll_version(z, name)
+                  if built is None:
+                      fail(z, f"could not read the version of {name}.dll inside the ZIP")
+                      continue
+                  if padded(built) != padded(version):
+                      fail(z, f"ZIP holds {name} {built}, but {csproj} says {version}; rebuild and push again")
+                      continue
+                  tag = f"{name}-v{version}"
+                  asset_name = f"{name}-{version}.zip"
+                  exists, digest = released_asset(tag, asset_name)
+                  b = dict(name=name, zip=z, src=csproj.parent, version=version, props=props, tag=tag,
+                           clobber=exists)
+                  verified.append(b)
+                  if exists and digest == hashlib.sha256(z.read_bytes()).hexdigest():
+                      print(f"{tag}: same bytes already released, skipping")
+                      b["clobber"] = False
+                      continue
+                  if exists and not FORCE:
+                      fail(z, f"{tag} exists with different bytes; bump <Version> or rerun dispatched with force")
+                      continue
+                  b["todo"] = True
+
+          # Release what is new.
+          released = []
+          for b in [b for b in verified if b.get("todo")]:
+              previous = last_tag(b["name"])
+              meta = b["src"] / "meta"
+              description = meta / "DESCRIPTION.md"
+              body = (description.read_text(encoding="utf-8").strip() if description.exists()
+                      else b["props"].get("Description") or b["name"])
+              lines = [body, "", "## Install",
+                       "Extract the ZIP into the game folder (next to `LucidCats.exe`) and merge folders. "
+                       "Needs BepInEx 5 (Mono x64)."]
+              needs = [x for x in re.split(r"[;,\s]+", b["props"].get("RuntimeLibs", "")) if x]
+              if needs:
+                  lines += ["", "**Requires:** " + ", ".join(f"{x} (its own `{x}-v*` release)" for x in needs)]
+              span = [f"{previous}..HEAD"] if previous else []
+              lines += ["", f"## Changes since {previous or 'the start'}",
+                        sh("git", "log", "--format=- %s (%h)", *span, "--", str(b["src"]))
+                        or "- No source changes recorded."]
+              notes = out / f"{b['name']}.md"
+              notes.write_text("\n".join(lines))
+              asset = out / f"{b['name']}-{b['version']}.zip"
+              asset.write_bytes(b["zip"].read_bytes())
+              icon = meta / "icon.png"
+              files = [str(asset)] + ([str(icon)] if icon.exists() else [])
+              title = f"{b['props'].get('Name') or b['name']} {b['version']}"
+              if b["clobber"]:
+                  subprocess.run(["gh", "release", "upload", b["tag"], *files, "--clobber"], check=True)
+                  subprocess.run(["gh", "release", "edit", b["tag"], "--notes-file", str(notes)], check=True)
+                  print(f"{b['tag']}: assets and notes overwritten as forced")
+                  continue
+              args = ["gh", "release", "create", b["tag"], *files, "--title", title,
+                      "--notes-file", str(notes), "--target", os.environ["GITHUB_SHA"], "--latest=false"]
+              if b["version"].startswith("0."):
+                  args.append("--prerelease")
+              subprocess.run(args, check=True)
+              released.append(b)
+              print(f"Released {b['tag']}")
+
+          if errors:
+              sys.exit(f"{errors} problem(s) above; the all-mods bundle was not built.")
+          if not released:
+              print("Nothing new to release.")
+              sys.exit()
+
+          # Merge everything into one bundle.
+          previous = last_tag("all-mods")
+          if previous:
+              major, minor, patch = (int(p) for p in previous.split("-v", 1)[1].split("."))
+              version = f"{major}.{minor}.{patch + 1}"
+          else:
+              version = "1.0.0"
+          bundle = out / f"LucidCats-all-mods-{version}.zip"
+          seen = set()
+          with zipfile.ZipFile(bundle, "w", zipfile.ZIP_DEFLATED) as merged:
+              for b in verified:
+                  with zipfile.ZipFile(b["zip"]) as part:
+                      for item in part.infolist():
+                          if item.filename not in seen:
+                              seen.add(item.filename)
+                              merged.writestr(item, part.read(item))
+          contents = "\n".join(f"- {(b['props'].get('Name') or b['name'])} {b['version']}"
+                               + (" (new)" if b in released else "") for b in verified)
+          notes = out / "all-mods.md"
+          notes.write_text(f"Every mod and runtime in one ZIP. Extract into the game folder and merge folders.\n\n"
+                           f"## Contents\n{contents}\n")
+          subprocess.run(["gh", "release", "create", f"all-mods-v{version}", str(bundle),
+                          "--title", f"All mods {version}", "--notes-file", str(notes),
+                          "--target", os.environ["GITHUB_SHA"], "--latest=false"], check=True)
+          print(f"Released all-mods-v{version}")
+
+  tags:
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -37,8 +238,8 @@ jobs:
         run: |
           TAG="${GITHUB_REF_NAME}"
           FILE="${{ steps.asset.outputs.file }}"
-          if [[ -n "$FILE" ]]; then
-            gh release create "$TAG" "$FILE" --title "$TAG" --generate-notes
-          else
+          if [[ "$TAG" == v[0-9]* ]]; then
             gh release create "$TAG" --title "$TAG" --generate-notes --latest
+          elif [[ -n "$FILE" ]]; then
+            gh release create "$TAG" "$FILE" --title "$TAG" --generate-notes --latest=false
           fi
