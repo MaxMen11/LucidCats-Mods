@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] First releases (every line is still at zero)
+- [X] First releases! working ish
 - [x] Automate mod, runtime and bundle releases
 - [x] Build the `all-mods` bundle
 - [x] Fix tag handling in `release.yml`
