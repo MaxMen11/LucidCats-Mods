@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<Guid>io.github.maxmen11.lucidcats.tipjar</Guid>
 		<Name>Tip Jar</Name>
-		<Version>0.1.0</Version>
+		<Version>0.2.0</Version>
 		<Description>Adds a shared tip jar to the lobby.</Description>
 		<Company>MaxMen11</Company>
 		<MetadataNamespace>TipJar</MetadataNamespace>
