@@ -19,7 +19,7 @@ on:
         default: false
 
 concurrency:
-  group: release
+  group: release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
