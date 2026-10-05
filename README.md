@@ -11,10 +11,10 @@ This repo's goal: all the information you need about Lucid Cats modding and mods
 ## Playing with mods
 
 1. In Steam, right-click Lucid Cats → Manage → Browse local files. That folder is the game dir.
-2. Download `BepInEx_win_x64_5.4.23.5.zip` from the [BepInEx releases](https://github.com/BepInEx/BepInEx/releases) — the x64 **Unity Mono** build, not IL2CPP, not BepInEx 6.
+2. Download `BepInEx_win_x64_5.4.23.5.zip` from the [BepInEx releases](https://github.com/BepInEx/BepInEx/releases) - the x64 **Unity Mono** build, not IL2CPP, not BepInEx 6.
 3. Extract the zip into the game dir, next to `LucidCats.exe`.
 4. Launch the game once and close it, so BepInEx creates its folders.
-5. Download a mod — see [Where to get mods](#where-to-get-mods). You get either a bare `.dll` or a `.zip`:
+5. Download a mod - see [Where to get mods](#where-to-get-mods). You get either a bare `.dll` or a `.zip`:
     - A bare `.dll`: Put it in its own subfolder in `BepInEx/plugins/`, e.g. `BepInEx/plugins/TipJar/TipJar.dll`.
     - A `.zip`: Extract it into the game dir. Merge folders when asked.
     - Both end up as `BepInEx/plugins/<ModName>/<ModName>.dll` (or in `BepInEx/patchers/...`).
