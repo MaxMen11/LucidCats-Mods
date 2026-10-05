@@ -1,26 +1,40 @@
 # Contributing
 
-## Questions
+Everything in this repo is open for help: mods, docs, libraries, templates, build files.
 
-If [MODDING.md](MODDING.md) doesn't answer a modding question, open an issue or just hit me up. Good questions get their answer written into the docs.
+But I cannot promise quick replies.
 
-## Getting your mod in
+## Talk first
 
-Mod contributions are welcome:
+Anything is accepted: Discord, an issue, a finished pull request; but talking with me first is strongly recommended, especially before bigger work.
 
-- open a pull request that adds one folder, `mods/<YourMod>/`
-- or open an issue first for a sanity check before you build anything
+- Discord: `maxmen11`
+- Matrix: coming later
+- Email: maybe coming later
+- or open an issue
 
-Accepted mods get their own release line (MODDING.md section 5).
+## Getting a mod in
 
-Checklist for the pull request:
+One folder, `mods/<YourMod>/`, with the `.csproj` and sources; nothing changed outside it. The pull request:
 
-- [ ] one folder, `mods/<YourMod>/`, with the `.csproj` and sources; nothing changed outside it
+- [ ] builds: `dotnet build mods/<YourMod>/<YourMod>.csproj` works
+- [ ] tested in a running game
 - [ ] a globally unique `<Guid>`, not a `com.lucidcats.*` default
 - [ ] no game code or assets
 - [ ] shared code via `SourceLibs`/`RuntimeLibs`, not copied in
-- [ ] `dotnet build mods/<YourMod>/<YourMod>.csproj` works and the code follows the MODDING.md style
+- [ ] follows the [MODDING.md](MODDING.md) style
+
+Accepted mods get their own release line (MODDING.md, section 5). Auto-releases don't work yet, so releases are manual for now.
+
+## Everything else
+
+- **Docs and TODO** - PR whenever.
+- **Libraries, templates, build files** - they affect every mod, so discuss first (Discord or issue).
 
 ## Bugs and ideas
 
-Open an issue. Check [TODO.md](TODO.md) first; the known gaps are already listed there.
+Open an issue. Check [TODO.md](TODO.md) first - the known gaps are already listed.
+
+## License
+
+Contributions come under this repo's [Apache-2.0](LICENSE) license.
