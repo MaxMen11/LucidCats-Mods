@@ -5,7 +5,7 @@ This repo's goal: all the information you need about Lucid Cats modding and mods
 > AI notice: If you are curious, please read [AI-NOTICE.md](AI-NOTICE.md).
 
 - **Playing with mods** - install and play. Six steps, right below.
-- **Making mods** - build your own in plain C#: no Unity editor, no IDE. [MODDING.md](MODDING.md) covers setup to release.
+- **Making mods** - build your own in plain C#: no Unity editor, no IDE. [MODDING.md](docs/MODDING.md) covers setup to release, with [C# basics](docs/CSharp-BASICS.md) and [every editor](docs/EDITORS.md) alongside.
 
 
 ## Playing with mods
@@ -60,7 +60,7 @@ LucidCats-Mods/
 
 | File | What it covers |
 |---|---|
-| [MODDING.md](MODDING.md) | How to mod with this structure, and anything you could need to know about modding, plus code style and conventions. |
+| [MODDING.md](docs/MODDING.md) | How to mod with this structure, and anything you could need to know about modding, plus code style and conventions. |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Getting your mod into this repo, issues, questions or any help. |
 | [TODO.md](TODO.md) | Unfinished parts of this repo, open for help. |
 

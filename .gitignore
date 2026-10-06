@@ -10,7 +10,6 @@ dist/runtime/*
 !dist/mods/*.zip
 !dist/runtime/*.zip
 .vs/
-.vscode/
 .idea/
 .DS_Store
 Thumbs.db
