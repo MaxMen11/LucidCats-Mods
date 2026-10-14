@@ -1,6 +1,6 @@
 # Modding Lucid Cats
 
-How modding works in this workspace, from setup to release. Installing mods as a player is in the [README](README.md); getting your own mod into the repo is in [CONTRIBUTING.md](CONTRIBUTING.md).
+How modding works in this workspace, from setup to release. Installing mods as a player is in the [README](../README.md); getting your own mod into the repo is in [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Contents
 
@@ -189,7 +189,7 @@ Prefixed releases never take the workspace snapshot's Latest badge. The Releases
 
 Snapshot, template, and source-library tags are pushed by hand and publish automatically. Mods and runtime libraries are built locally because compiling needs the game DLLs; their zips are committed under dist/, and the Action releases every unreleased version it finds on push to main, then cuts the bundle. Bump Version in the .csproj to ship again — identical bytes are skipped, changed bytes under the same version fail the run unless dispatched with force
 
-To publish a mod of your own in this repo, see [CONTRIBUTING.md](CONTRIBUTING.md).
+To publish a mod of your own in this repo, see [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## 6. Going deeper
 

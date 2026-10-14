@@ -22,9 +22,9 @@ One folder, `mods/<YourMod>/`, with the `.csproj` and sources; nothing changed o
 - [ ] a globally unique `<Guid>`, not a `com.lucidcats.*` default
 - [ ] no game code or assets
 - [ ] shared code via `SourceLibs`/`RuntimeLibs`, not copied in
-- [ ] follows the [MODDING.md](MODDING.md) style
+- [ ] follows the [MODDING.md](docs/MODDING.md) style
 
-Accepted mods get their own release line (MODDING.md, section 5). Auto-releases don't work yet, so releases are manual for now.
+Accepted mods get their own release line (MODDING.md, section 5). Releases are automated from `dist/` on push to `main` (see `.github/workflows/release.yml`); manual tagging is only needed for snapshots, templates and source libraries.
 
 ## Everything else
 

@@ -5,5 +5,8 @@
 	"identity": "LucidCats.Patcher",
 	"name": "Lucid Cats patcher mod",
 	"shortName": "lcpatcher",
-	"sourceName": "ModName"
+	"sourceName": "ModName",
+	"symbols": {
+		"lowerName": { "type": "derived", "valueSource": "name", "valueTransform": "lowerCase", "replaces": "modname" }
+	}
 }

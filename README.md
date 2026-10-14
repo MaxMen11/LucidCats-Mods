@@ -1,5 +1,7 @@
 # Unified Lucid Cats Modding Structure and Mods
 
+> **Notice:** Currently waiting on the game devs for official modding news / bodyless function references; GitHub-side compiling and compile checks for PRs are not set up yet.
+
 This repo's goal: all the information you need about Lucid Cats modding and mods, a clean architecture for the mods themselves, and a clean setup for anyone who wants to get started.
 
 > AI notice: If you are curious, please read [AI-NOTICE.md](AI-NOTICE.md).

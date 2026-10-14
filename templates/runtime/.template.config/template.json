@@ -6,5 +6,8 @@
 	"name": "Lucid Cats runtime library",
 	"shortName": "lcruntime",
 	"sourceName": "RuntimeName",
-	"preferNameDirectory": true
+	"preferNameDirectory": true,
+	"symbols": {
+		"lowerName": { "type": "derived", "valueSource": "name", "valueTransform": "lowerCase", "replaces": "runtimename" }
+	}
 }
