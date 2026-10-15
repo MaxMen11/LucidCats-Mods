@@ -26,4 +26,4 @@ Seven release lines, each versioning independently: workspace snapshot, bare tem
 
 ## AI involvement
 
-AI was used in parts of this repository, but every file was manually reviewed. See `AI-NOTICE.md` for the tier breakdown.
+AI was used in parts of this repository, but every file was manually reviewed. See [AI-NOTICE.md](AI-NOTICE.md) for the tier breakdown.

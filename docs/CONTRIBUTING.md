@@ -8,6 +8,8 @@ But I cannot promise quick replies.
 
 Anything is accepted: Discord, an issue, a finished pull request; but talking with me first is strongly recommended, especially before bigger work.
 
+Read [PHILOSOPHY.md](PHILOSOPHY.md) first; it is short and it is what every review is measured against.
+
 - Discord: `maxmen11`
 - Matrix: coming later
 - Email: maybe coming later
@@ -22,7 +24,8 @@ One folder, `mods/<YourMod>/`, with the `.csproj` and sources; nothing changed o
 - [ ] a globally unique `<Guid>`, not a `com.lucidcats.*` default
 - [ ] no game code or assets
 - [ ] shared code via `SourceLibs`/`RuntimeLibs`, not copied in
-- [ ] follows the [MODDING.md](MODDING.md) style
+- [ ] follows [PHILOSOPHY.md](PHILOSOPHY.md) and the [MODDING.md](MODDING.md) code style
+- [ ] version follows [semver](https://semver.org/); a released `<Guid>` never changes
 
 Accepted mods get their own release line (MODDING.md, section 5). Releases are automated from `dist/` on push to `main` (see `.github/workflows/release.yml`); manual tagging is only needed for snapshots, templates and source libraries.
 
@@ -30,6 +33,7 @@ Accepted mods get their own release line (MODDING.md, section 5). Releases are a
 
 - **Docs and TODO** - PR whenever.
 - **Libraries, templates, build files** - they affect every mod, so discuss first (Discord or issue).
+- **Philosophy** - open for discussion too, but it changes rarely and only with a reason.
 
 ## Bugs and ideas
 

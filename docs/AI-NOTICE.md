@@ -8,7 +8,7 @@ The current level of AI involvement is (VERY OLD, THIS TABLE NEEDS TO BE REDONE)
 | **Heavily AI assisted** | `libs/runtime/MapKit/`, `libs/source/MenuKit/`, `mods/QualityPlus/`, `templates/` |
 | **Mildly AI assisted** | `docs/MODDING.md`, `mods/TipJar/`, `mods/FullParty/`, `mods/ImmersiveSpectating/`, `Directory.Build.props`, `Directory.Build.targets`, `build.proj`, `global.json`, `.editorconfig`, `.config/dotnet-tools.json`, `.gitignore` |
 | **AI checks and fixes** | `README.md`, `flake.nix` |
-| **Fully human made** | `docs/TODO.md`, `.github/CONTRIBUTING.md`, `docs/AI-NOTICE.md`, `mods/Conflation/`, `LICENSE` |
+| **Fully human made** | `docs/TODO.md`, `docs/CONTRIBUTING.md`, `docs/AI-NOTICE.md`, `mods/Conflation/`, `LICENSE` |
 
 I intend to continue reducing AI involvement over time, with the long-term goal of having as much of the repository as possible written and maintained by humans.
 

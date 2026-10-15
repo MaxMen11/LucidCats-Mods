@@ -1,6 +1,6 @@
 # Modding Lucid Cats
 
-How modding works in this workspace, from setup to release. Installing mods as a player is in the [README](../README.md); getting your own mod into the repo is in [CONTRIBUTING.md](CONTRIBUTING.md).
+How modding works in this workspace, from setup to release. Installing mods as a player is in the [README](../README.md); getting your own mod into the repo is in [CONTRIBUTING.md](CONTRIBUTING.md); the why behind the rules is in [PHILOSOPHY.md](PHILOSOPHY.md).
 
 ## Contents
 
@@ -12,7 +12,7 @@ How modding works in this workspace, from setup to release. Installing mods as a
 6. Going deeper: patchers, C++
 7. Troubleshooting
 
-Code style and conventions are at the end.
+Code style and conventions are at the end; [PHILOSOPHY.md](PHILOSOPHY.md) is the short version of them.
 
 ## 1. Modding setup (once per machine, ~10 minutes)
 
@@ -98,7 +98,7 @@ Every field is optional, but replace the development GUID before a public releas
 | `Name` | project filename; displayed by BepInEx and the Mod Manager |
 | `Version` | `1.0.0`; used by BepInEx, dependencies and DLL metadata |
 | `Description` | empty; displayed by the Mod Manager |
-| `Company` | project name; author or team displayed by the Mod Manager |
+| `Company` | empty; author or team displayed by the Mod Manager |
 | `SourceLibs` | none; source helpers compiled into this DLL |
 | `RuntimeLibs` | none; shared DLLs built first and declared as BepInEx dependencies |
 
@@ -106,7 +106,7 @@ The project filename also defaults the DLL name and namespace. Rare standard pro
 
 The root build files supply the framework, compiler settings, game references, output paths, validation, deployment and ZIP packaging. They also generate `ModMetadata.Guid`, `Name` and `Version`, so these values are not repeated in `Plugin.cs`.
 
-Build (drop the flag if `LUCIDCATS_DIR` is set):
+Build (add `-p:LucidCatsDir="..."` if `LUCIDCATS_DIR` is not set):
 
 ```
 dotnet build mods/HelloCats/HelloCats.csproj
@@ -187,7 +187,7 @@ Everything ships from this one repo as seven release lines. Each is a tag patter
 
 Prefixed releases never take the workspace snapshot's Latest badge. The Releases search accepts filters such as `tag:MapKit` and `tag:template`. The names `template`, `template-full`, and `all-mods` are reserved.
 
-Snapshot, template, and source-library tags are pushed by hand and publish automatically. Mods and runtime libraries are built locally because compiling needs the game DLLs; their zips are committed under dist/, and the Action releases every unreleased version it finds on push to main, then cuts the bundle. Bump Version in the .csproj to ship again — identical bytes are skipped, changed bytes under the same version fail the run unless dispatched with force
+Snapshot, template, and source-library tags are pushed by hand and publish automatically. Mods and runtime libraries are built locally because compiling needs the game DLLs; their zips are committed under `dist/`, and the Action releases every unreleased version it finds on push to `main`, then cuts the bundle. Bump `Version` in the `.csproj` to ship again ([semver](https://semver.org/)); identical bytes are skipped, changed bytes under the same version fail the run unless dispatched with `force`.
 
 To publish a mod of your own in this repo, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -216,7 +216,7 @@ To publish a mod of your own in this repo, see [CONTRIBUTING.md](CONTRIBUTING.md
 
 | Symptom | Fix |
 |---|---|
-| `Point LucidCatsDir at your Lucid Cats game folder` | The build cannot find the game; check the `-p:` flag, `LUCIDCATS_DIR`, or `Directory.Build.props` (section 1). |
+| `Point LucidCatsDir at the Lucid Cats game folder` | The build cannot find the game; check the `-p:` flag, `LUCIDCATS_DIR`, or `Directory.Build.props` (section 1). |
 | `A compatible .NET SDK was not found` or `Requested SDK version: 8.0.100` | Install the .NET 8 SDK or a newer SDK permitted by `global.json`. Run `dotnet --list-sdks` to confirm that an SDK, rather than only a runtime, is installed. |
 | Mod builds but never loads in game | BepInEx not installed, or wrong build: `BepInEx_win_x64_5.4.23.5` (Mono x64) is the right one. Check `BepInEx/LogOutput.log`. |
 | Windows blocks the downloaded files (dll "access denied" / refuses to load) | Windows marks files from the internet. In PowerShell, `cd` into the game dir and run: `Get-ChildItem -Recurse \| Unblock-File` |
@@ -226,6 +226,8 @@ To publish a mod of your own in this repo, see [CONTRIBUTING.md](CONTRIBUTING.md
 | Plugin GUID collisions | Change one mod's `Guid` before releasing. |
 
 ## Code style
+
+The long form of [PHILOSOPHY.md](PHILOSOPHY.md). When the two disagree, fix the docs, not the mod.
 
 Harmony is a last resort, not a first tool: use the game's events, components, data and config binding first, because every patch is a hook into game internals that an update can break. When a patch is necessary, prefer `Postfix`, then `Prefix`, then `Transpiler`, and patch the smallest possible part. MenuKit uses no Harmony; MapKit keeps its few patches at the lifecycle boundaries where before-or-after timing matters.
 

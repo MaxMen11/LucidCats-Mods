@@ -4,7 +4,7 @@ A collection of Lucid Cats mods, tools, and documentation built around a unified
 
 > **Status:** Official modding news from devs and body-less references for methods whose implementations are unavailable are still pending. GitHub Actions checks workspace consistency, but automated mod compilation checks for pull requests are not yet configured.
 
-> **AI-NOTICE** If you are curious please look into this file [AI notice](docs/AI-NOTICE.md) how much AI was used at making this, not updated consistenlty (can be behind commits).
+> **AI-NOTICE** If you are curious please look into this file [AI notice](docs/AI-NOTICE.md) how much AI was used at making this, not updated consistently (can be behind commits).
 
 This repository aims to provide a central place for Lucid Cats mods, a consistent architecture for developing them, and documentation for anyone who wants to get started.
 
@@ -53,12 +53,10 @@ A normal BepInEx installation does not require modifying the original game assem
 
 - **[Nexus Mods](https://www.nexusmods.com/lucidcats/mods):** Browse and download Lucid Cats mods on Nexus Mods.
 - **[GitHub Releases](https://github.com/MaxMen11/LucidCats-Mods/releases):** Download packaged mods and available releases from this repository.
-- **[Browse mods on GitHub](https://github.com/search?q=lucid+cats&type=repositories):** Explore the repository to discover individual mods, source code, and project files.
+- **[Other repos on GitHub](https://github.com/search?q=lucid+cats&type=repositories):** Some mods are developed in their own repositories.
 - **[Lucid Cats Mod Manager](https://github.com/SusoTF/LucidCatsModManager):** For managing mods in-game.
 
 Check each mod's documentation and release notes for installation instructions, dependencies, compatibility, and known issues.
-
-Always check the release notes for requirements and known issues before installing a mod.
 
 ## Making mods with ULCaMoS
 

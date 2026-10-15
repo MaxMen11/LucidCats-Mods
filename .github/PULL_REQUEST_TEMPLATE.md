@@ -7,4 +7,5 @@
 - [ ] a globally unique `<Guid>`, not a `com.lucidcats.*` default
 - [ ] no game code or assets
 - [ ] shared code via `SourceLibs`/`RuntimeLibs`, not copied in
-- [ ] follows [docs/MODDING.md](../docs/MODDING.md) style
+- [ ] follows [PHILOSOPHY.md](../docs/PHILOSOPHY.md) and the [MODDING.md](../docs/MODDING.md) code style
+- [ ] version follows [semver](https://semver.org/); a released `<Guid>` never changes
