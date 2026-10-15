@@ -2,6 +2,14 @@
 
 ULCaMoS (Unified Lucid Cats Modding Structure) philosophy, consolidated.
 
+## Where it comes from
+
+Loose influences, not a spec. The structure was shaped before most of it was written, with these in mind:
+
+- **Nix's [dendritic pattern](https://github.com/mightyiam/dendritic).** Every file is a self-contained module, discovered by its location, and the whole tree composes without a central list. Here that is one folder per mod, found by `build.proj`.
+- **Nix flakes in general.** Inputs declared once, outputs derived; the same idea as `Directory.Build.props` and `Directory.Build.targets` deriving everything a mod does not state itself.
+- **BepInEx's own layout.** `plugins/`, `patchers/`, `config/`; the output mirrors what the loader already expects, so a ZIP merges in with no extra steps.
+
 ## Core ideas
 
 - **One folder per mod.** Adding a mod touches nothing central; the build discovers it automatically.
