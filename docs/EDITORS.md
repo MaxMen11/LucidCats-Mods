@@ -36,7 +36,7 @@ Free for **non-commercial** use since 2024; many people still believe it is paid
 ## Visual Studio Code (Windows, macOS, Linux)
 
 1. Install VS Code, then the **C# Dev Kit** extension (it pulls in the **C#** extension).
-2. Open the repo folder. This repo ships `.vscode/extensions.json` (VS Code will offer to install the right extensions) and `.vscode/tasks.json`; `Terminal → Run Build Task` (Ctrl+Shift+B) runs `dotnet build build.proj` for you.
+2. Open the repo folder. Build in the built-in terminal with `dotnet build build.proj` (add your own `.vscode/tasks.json` if you want a build task shortcut).
 
 The *C#* extension is fully free; *C# Dev Kit* uses the Visual Studio Community license, free for individuals, students, open-source and companies with up to 5 developers. Every hobby modder is on the free side. If you want zero license questions at all, DotRush or the plain C# extension works too.
 
@@ -49,7 +49,7 @@ With a plugin manager plus `nvim-lspconfig` and Mason:
 require("lspconfig").omnisharp.setup({})
 ```
 
-Then `:MasonInstall omnisharp` and open any `.cs` file. Formatting follows the repo's `omnisharp.json` and `.editorconfig` (tabs). No repo files needed; the server config lives in your dotfiles.
+Then `:MasonInstall omnisharp` and open any `.cs` file. Formatting follows the repo's `.editorconfig` (tabs). No repo files needed; the server config lives in your dotfiles.
 
 ## Helix
 

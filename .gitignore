@@ -14,4 +14,3 @@ dist/runtime/*
 .DS_Store
 Thumbs.db
 decompiled/
-GHC.md
